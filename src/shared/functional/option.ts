@@ -4,7 +4,7 @@ export interface Match<T, U> {
 }
 
 export interface Option<T> {
-  isSome() : boolean
+  isSome(): boolean
   isNone(): boolean
   match<U>(fn: Match<T, U>): U
   unwrapOr(other: T): T
@@ -21,6 +21,10 @@ export interface OptionNone<T> extends Option<T> {
 
 export function Some<T>(val: T): Option<T> {
   return someConstructor<T>(val)
+}
+
+export function None<T>(): Option<T> {
+  return noneConstructor<T>()
 }
 
 function someConstructor<T>(val: T): OptionSome<T> {
@@ -58,7 +62,7 @@ function noneConstructor<T>(): OptionNone<T> {
       return other
     },
     unwrap() {
-      throw new ReferenceError('Trying to unwrap None.');
+      throw new ReferenceError('Trying to unwrap None.')
     },
   }
 }
