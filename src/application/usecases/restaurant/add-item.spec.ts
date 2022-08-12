@@ -1,55 +1,7 @@
-import {
-  Either, left, right,
-} from '@functional/either'
 import MenuItem from '@entities/restaurant/menuItem'
-
-export class AddItemError implements Error {
-  name: string
-  message: string
-  stack?: string
-
-  constructor(message: string, stack?: string) {
-    this.name = 'AddItemError'
-    this.message = message
-    this.stack = stack
-  }
-}
-
-type AddItemRequest = {
-  menuId: string,
-  menuSectionId?: string,
-}
-
-export class AddItem {
-  constructor(
-    readonly menuItemRepository: MenuItemRepository,
-    readonly menuSectionRepository: MenuSectionRepository,
-  ) {}
-
-  async execute({ menuId, menuSectionId }: AddItemRequest): Promise<Either<AddItemError, void>> {
-    const item = MenuItem.create({
-      menuId, menuSectionId,
-    })
-
-    if (menuSectionId) {
-      const comparedMenuId = await this.menuSectionRepository.getMenu(menuSectionId)
-
-      if (comparedMenuId !== menuId) {
-        return left(new AddItemError('Menu section is from a different menu.'))
-      }
-
-      await this.menuSectionRepository.add(item)
-    }
-
-    await this.menuItemRepository.add(item)
-
-    return right(undefined)
-  }
-}
-
-export interface MenuItemRepository {
-  add(item: MenuItem): Promise<void>;
-}
+import MenuItemRepository from 'src/application/repositories/restaurant/menu-item-repository'
+import MenuSectionRepository from 'src/application/repositories/restaurant/menu-section-repository'
+import AddItem from './add-item'
 
 class MenuItemRepositorySpy implements MenuItemRepository {
   items: MenuItem[] = []
@@ -59,11 +11,6 @@ class MenuItemRepositorySpy implements MenuItemRepository {
     this.items.push(item)
     this.callsCount += 1
   }
-}
-
-export interface MenuSectionRepository {
-  getMenu(menuSectionId: string): Promise<string>
-  add(item: MenuItem): Promise<void>
 }
 
 class MenuSectionRepositorySpy implements MenuSectionRepository {
