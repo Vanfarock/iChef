@@ -24,6 +24,7 @@
         "no-empty-function": "off",
         "import/no-unresolved": "off",
         "no-undef": "off",
+        "import/extensions": "off",
         "semi": [
             "error",
             "never"
