@@ -25,6 +25,7 @@
         "import/no-unresolved": "off",
         "no-undef": "off",
         "import/extensions": "off",
+        "import/prefer-default-export": "off",
         "semi": [
             "error",
             "never"
