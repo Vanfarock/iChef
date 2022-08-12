@@ -5,7 +5,7 @@ export interface Match<T, U> {
   none: () => U
 }
 
-export interface Either<L, R> {
+export interface Either<L, R = void> {
   isLeft(): boolean
   isRight(): boolean
   left(): Option<L>
@@ -15,11 +15,11 @@ export interface Either<L, R> {
   unwrapLeftOr(other: L): L
   unwrapRight(): R | never
   unwrapRightOr(other: R): R
-  mapLeft<U>(fn: (left: L) => U): Either<U, R>
-  mapRight<U>(fn: (right: R) => U): Either<L, U>
+  mapLeft<U>(fn: (l: L) => U): Either<U, R>
+  mapRight<U>(fn: (r: R) => U): Either<L, U>
 }
 
-export class ResultLeft<L, R> implements Either<L, R> {
+export class Left<L, R> implements Either<L, R> {
   constructor(readonly val: L) { }
 
   isLeft(): boolean {
@@ -58,16 +58,16 @@ export class ResultLeft<L, R> implements Either<L, R> {
     return other
   }
 
-  mapLeft<U>(fn: (left: L) => U): Either<U, never> {
-    return new ResultLeft<U, never>(fn(this.val))
+  mapLeft<U>(fn: (l: L) => U): Either<U, never> {
+    return new Left<U, never>(fn(this.val))
   }
 
-  mapRight<U>(fn: (right: R) => U): Either<L, never> {
-    return new ResultLeft<L, never>(this.val)
+  mapRight<U>(fn: (r: R) => U): Either<L, never> {
+    return new Left<L, never>(this.val)
   }
 }
 
-export class ResultRight<L, R> implements Either<L, R> {
+export class Right<L, R> implements Either<L, R> {
   constructor(readonly val: R) { }
 
   isLeft(): boolean {
@@ -106,11 +106,19 @@ export class ResultRight<L, R> implements Either<L, R> {
     return this.val
   }
 
-  mapLeft<U>(fn: (left: L) => U): Either<never, R> {
-    return new ResultRight<never, R>(this.val)
+  mapLeft<U>(fn: (l: L) => U): Either<never, R> {
+    return new Right<never, R>(this.val)
   }
 
-  mapRight<U>(fn: (right: R) => U): Either<never, U> {
-    return new ResultRight<never, U>(fn(this.val))
+  mapRight<U>(fn: (r: R) => U): Either<never, U> {
+    return new Right<never, U>(fn(this.val))
   }
+}
+
+export function left<L>(val: L) {
+  return new Left<L, never>(val)
+}
+
+export function right<R>(val: R) {
+  return new Right<never, R>(val)
 }

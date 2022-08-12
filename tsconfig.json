@@ -21,9 +21,16 @@
     "strict": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@functional/*": ["./src/shared/functional/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@entities/*": ["./src/domain/entities/*"]
+    }
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

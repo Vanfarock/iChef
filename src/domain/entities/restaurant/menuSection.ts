@@ -1,4 +1,4 @@
-import Entity from 'src/shared/domain/entities/entity'
+import Entity from '@shared/domain/entities/entity'
 
 type MenuSectionProps = {
   menuId: string
