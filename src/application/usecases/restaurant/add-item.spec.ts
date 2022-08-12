@@ -1,37 +1,9 @@
-import MenuItem from '@entities/restaurant/menuItem'
-import MenuItemRepository from 'src/application/repositories/restaurant/menu-item-repository'
-import MenuSectionRepository from 'src/application/repositories/restaurant/menu-section-repository'
-import AddItem from './add-item'
-
-class MenuItemRepositorySpy implements MenuItemRepository {
-  items: MenuItem[] = []
-  callsCount = 0
-
-  async add(item: MenuItem): Promise<void> {
-    this.items.push(item)
-    this.callsCount += 1
-  }
-}
-
-class MenuSectionRepositorySpy implements MenuSectionRepository {
-  items: MenuItem[] = []
-  getMenuCallsCount = 0
-  addCallsCount = 0
-
-  async getMenu(menuSectionId: string): Promise<string> {
-    this.getMenuCallsCount += 1
-
-    return 'menu_id'
-  }
-
-  async add(item: MenuItem): Promise<void> {
-    this.items.push(item)
-    this.addCallsCount += 1
-  }
-}
+import MenuItemRepositorySpy from '@tests/repositories/restaurant/menu-item-repository-spy'
+import MenuSectionRepositorySpy from '@tests/repositories/restaurant/menu-section-repository-spy'
+import AddMenuItem from './add-item'
 
 type SutOutput = {
-  sut: AddItem,
+  sut: AddMenuItem,
   menuItemRepository: MenuItemRepositorySpy,
   menuSectionRepository: MenuSectionRepositorySpy,
 }
@@ -39,7 +11,7 @@ type SutOutput = {
 const makeSut = (): SutOutput => {
   const menuItemRepository = new MenuItemRepositorySpy()
   const menuSectionRepository = new MenuSectionRepositorySpy()
-  const sut = new AddItem(menuItemRepository, menuSectionRepository)
+  const sut = new AddMenuItem(menuItemRepository, menuSectionRepository)
 
   return {
     sut,

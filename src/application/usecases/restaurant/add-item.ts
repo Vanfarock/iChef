@@ -3,7 +3,7 @@ import { Either, left, right } from '@functional/either'
 import MenuItemRepository from 'src/application/repositories/restaurant/menu-item-repository'
 import MenuSectionRepository from 'src/application/repositories/restaurant/menu-section-repository'
 
-export class AddItemError implements Error {
+export class AddMenuItemError implements Error {
   name: string
   message: string
   stack?: string
@@ -20,13 +20,14 @@ type AddItemRequest = {
   menuSectionId?: string,
 }
 
-export default class AddItem {
+export default class AddMenuItem {
   constructor(
     readonly menuItemRepository: MenuItemRepository,
     readonly menuSectionRepository: MenuSectionRepository,
   ) {}
 
-  async execute({ menuId, menuSectionId }: AddItemRequest): Promise<Either<AddItemError, void>> {
+  async execute(request: AddItemRequest): Promise<Either<AddMenuItemError, void>> {
+    const { menuId, menuSectionId } = request
     const item = MenuItem.create({
       menuId, menuSectionId,
     })
@@ -35,7 +36,7 @@ export default class AddItem {
       const comparedMenuId = await this.menuSectionRepository.getMenu(menuSectionId)
 
       if (comparedMenuId !== menuId) {
-        return left(new AddItemError('Menu section is from a different menu.'))
+        return left(new AddMenuItemError('Menu section is from a different menu.'))
       }
 
       await this.menuSectionRepository.add(item)

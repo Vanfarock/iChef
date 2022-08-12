@@ -1,7 +1,9 @@
 import Entity from '@shared/domain/entities/entity'
 
 type MenuSectionProps = {
-  menuId: string
+  menuId: string,
+  name: string,
+  order: number,
 }
 
 export default class MenuSection extends Entity<MenuSectionProps> {
