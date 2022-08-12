@@ -15,16 +15,18 @@ export class AddItemError implements Error {
   }
 }
 
+type AddItemRequest = {
+  menuId: string,
+  menuSectionId?: string,
+}
+
 export class AddItem {
   constructor(readonly menuItemRepository: MenuItemRepository) {}
 
-  async execute(): Promise<Either<AddItemError, void>> {
-    const menuItem = MenuItem.create({
-      menuId: '',
-      menuSectionId: '',
-    })
-
-    this.menuItemRepository.add(menuItem)
+  async execute({ menuId, menuSectionId }: AddItemRequest): Promise<Either<AddItemError, void>> {
+    this.menuItemRepository.add(MenuItem.create({
+      menuId, menuSectionId,
+    }))
 
     return right(undefined)
   }
@@ -34,23 +36,41 @@ export interface MenuItemRepository {
   add(item: MenuItem): Promise<Either<AddItemError, void>>;
 }
 
-class MenuItemRepositoryMock implements MenuItemRepository {
+class MenuItemRepositorySpy implements MenuItemRepository {
   items: MenuItem[] = []
+  callsCount = 0
 
   async add(item: MenuItem): Promise<Either<AddItemError, void>> {
     this.items.push(item)
+    this.callsCount += 1
 
     return right(undefined)
   }
 }
 
-describe('AddItem', () => {
-  it('should add new item to menu', () => {
-    const menuItemRepository = new MenuItemRepositoryMock()
-    const addItem = new AddItem(menuItemRepository)
+type SutOutput = {
+  sut: AddItem,
+  menuItemRepository: MenuItemRepositorySpy,
+}
 
-    addItem.execute()
+const makeSut = (): SutOutput => {
+  const menuItemRepository = new MenuItemRepositorySpy()
+  const sut = new AddItem(menuItemRepository)
+
+  return {
+    sut,
+    menuItemRepository,
+  }
+}
+
+describe('AddItem', () => {
+  it('should add new item to menu', async () => {
+    const { sut, menuItemRepository } = makeSut()
+
+    await sut.execute({ menuId: 'menu_id' })
 
     expect(menuItemRepository.items).toHaveLength(1)
+    expect(menuItemRepository.callsCount).toBe(1)
+    expect(menuItemRepository.items[0].menuId()).toEqual('menu_id')
   })
 })

@@ -26,6 +26,8 @@
         "no-undef": "off",
         "import/extensions": "off",
         "import/prefer-default-export": "off",
+        "indent": "off",
+        "@typescript-eslint/indent": ["error", 2],
         "semi": [
             "error",
             "never"

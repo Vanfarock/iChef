@@ -15,4 +15,8 @@ export default class MenuItem extends Entity<MenuItemProps> {
 
     return menuItem
   }
+
+  public menuId(): string {
+    return this.props.menuId
+  }
 }
