@@ -11,58 +11,56 @@ export interface Option<T> {
   unwrap(): T | never
 }
 
-export interface OptionSome<T> extends Option<T> {
-  unwrap(): T
-}
+export class OptionSome<T> implements Option<T> {
+  constructor(readonly val: T) {}
 
-export interface OptionNone<T> extends Option<T> {
-  unwrap(): never
+  isSome(): boolean {
+    return true
+  }
+
+  isNone(): boolean {
+    return false
+  }
+
+  match<U>(fn: Match<T, U>): U {
+    return fn.some(this.val)
+  }
+
+  unwrapOr(other: T): T {
+    return this.val
+  }
+
+  unwrap() {
+    return this.val
+  }
 }
 
 export function Some<T>(val: T): Option<T> {
-  return someConstructor<T>(val)
+  return new OptionSome<T>(val)
+}
+
+export class OptionNone<T> implements Option<T> {
+  isSome(): boolean {
+    return false
+  }
+
+  isNone(): boolean {
+    return true
+  }
+
+  match<U>(fn: Match<T, U>): U {
+    return fn.none()
+  }
+
+  unwrapOr(other: T): T {
+    return other
+  }
+
+  unwrap(): never {
+    throw new ReferenceError('Trying to unwrap None.')
+  }
 }
 
 export function None<T>(): Option<T> {
-  return noneConstructor<T>()
-}
-
-function someConstructor<T>(val: T): OptionSome<T> {
-  return {
-    isSome(): boolean {
-      return true
-    },
-    isNone(): boolean {
-      return false
-    },
-    match<U>(fn: Match<T, U>): U {
-      return fn.some(val)
-    },
-    unwrapOr(other: T): T {
-      return val
-    },
-    unwrap() {
-      return val
-    },
-  }
-}
-
-function noneConstructor<T>(): OptionNone<T> {
-  return {
-    isSome(): boolean {
-      return false
-    },
-    isNone(): boolean {
-      return true
-    },
-    match<U>(fn: Match<T, U>): U {
-      return fn.none()
-    },
-    unwrapOr(other: T): T {
-      return other
-    },
-    unwrap() {
-      throw new ReferenceError('Trying to unwrap None.')
-    },
-  }
+  return new OptionNone<T>()
 }
