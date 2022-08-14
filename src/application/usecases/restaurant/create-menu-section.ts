@@ -15,18 +15,18 @@ export class CreateMenuSectionError implements Error {
 }
 
 type CreateSectionRequest = {
-  menuId: string,
+  restaurantId: string,
   name: string,
   order: number,
 }
 
 export default class CreateMenuSection {
-  constructor(readonly menuSectionRepository: MenuSectionRepository) {}
+  constructor(readonly menuSectionRepository: MenuSectionRepository) { }
 
   async execute(request: CreateSectionRequest): Promise<Either<CreateMenuSectionError, void>> {
-    const { menuId, name, order } = request
+    const { restaurantId, name, order } = request
     const section = MenuSection.create({
-      menuId,
+      restaurantId,
       name,
       order,
     })

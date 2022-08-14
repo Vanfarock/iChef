@@ -1,7 +1,7 @@
 import Entity from '@shared/domain/entities/entity'
 
 type MenuSectionProps = {
-  menuId: string,
+  restaurantId: string,
   name: string,
   order: number,
 }

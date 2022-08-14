@@ -8,10 +8,10 @@ export default class MenuSectionRepositorySpy implements MenuSectionRepository {
   addCallsCount = 0
   createCallsCount = 0
 
-  async getMenu(menuSectionId: string): Promise<string> {
+  async getRestaurant(menuSectionId: string): Promise<string> {
     this.getMenuCallsCount += 1
 
-    return 'menu_id'
+    return 'restaurant_id'
   }
 
   async add(item: MenuItem): Promise<void> {

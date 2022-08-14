@@ -1,8 +1,11 @@
 import Entity from '@shared/domain/entities/entity'
 
 type MenuItemProps = {
-  menuId: string
-  menuSectionId?: string
+  restaurantId: string
+  menuSectionId?: string,
+  name: string,
+  description: string,
+  value: number,
 }
 
 export default class MenuItem extends Entity<MenuItemProps> {
@@ -16,7 +19,11 @@ export default class MenuItem extends Entity<MenuItemProps> {
     return menuItem
   }
 
-  public menuId(): string {
-    return this.props.menuId
+  public restaurantId(): string {
+    return this.props.restaurantId
+  }
+
+  public value(): number {
+    return this.props.value
   }
 }

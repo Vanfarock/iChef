@@ -18,7 +18,7 @@ describe('CreateMenuSection', () => {
     const { sut, menuSectionRepository } = makeSut()
 
     const result = await sut.execute({
-      menuId: 'menu_id',
+      restaurantId: 'restaurant_id',
       name: 'menu_section',
       order: 0,
     })

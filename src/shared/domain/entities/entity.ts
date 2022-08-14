@@ -1,9 +1,14 @@
+/* eslint-disable no-underscore-dangle */
 export default class Entity<T> {
-  protected id: string
+  protected _id: string
   protected props: T
 
   constructor(props: T, id?: string) {
     this.props = props
-    this.id = id ?? ''
+    this._id = id ?? ''
+  }
+
+  public id(): string {
+    return this._id
   }
 }

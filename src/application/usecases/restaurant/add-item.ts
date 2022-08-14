@@ -16,27 +16,36 @@ export class AddMenuItemError implements Error {
 }
 
 type AddItemRequest = {
-  menuId: string,
+  restaurantId: string,
   menuSectionId?: string,
+  name: string,
+  description: string,
+  value: number,
 }
 
 export default class AddMenuItem {
   constructor(
     readonly menuItemRepository: MenuItemRepository,
     readonly menuSectionRepository: MenuSectionRepository,
-  ) {}
+  ) { }
 
   async execute(request: AddItemRequest): Promise<Either<AddMenuItemError, void>> {
-    const { menuId, menuSectionId } = request
+    const {
+      restaurantId, menuSectionId, name, description, value,
+    } = request
     const item = MenuItem.create({
-      menuId, menuSectionId,
+      restaurantId,
+      menuSectionId,
+      name,
+      description,
+      value,
     })
 
     if (menuSectionId) {
-      const comparedMenuId = await this.menuSectionRepository.getMenu(menuSectionId)
+      const comparedRestaurantId = await this.menuSectionRepository.getRestaurant(menuSectionId)
 
-      if (comparedMenuId !== menuId) {
-        return left(new AddMenuItemError('Menu section is from a different menu.'))
+      if (comparedRestaurantId !== restaurantId) {
+        return left(new AddMenuItemError('Menu section is from a different restaurant.'))
       }
 
       await this.menuSectionRepository.add(item)
