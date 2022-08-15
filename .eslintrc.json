@@ -28,7 +28,13 @@
         "import/extensions": "off",
         "import/prefer-default-export": "off",
         "indent": "off",
-        "@typescript-eslint/indent": ["error", 2],
+        "no-shadow": "off",
+        "no-restricted-syntax": [
+            "error",
+            "ForInStatement",
+            "LabeledStatement",
+            "WithStatement"
+        ],
         "semi": [
             "error",
             "never"
@@ -44,7 +50,16 @@
             "error",
             "windows"
         ],
-        "@typescript-eslint/no-floating-promises": ["error"],
-        "@typescript-eslint/no-misused-promises": ["error"]
+        "@typescript-eslint/indent": [
+            "error",
+            2
+        ],
+        "@typescript-eslint/no-floating-promises": [
+            "error"
+        ],
+        "@typescript-eslint/no-misused-promises": [
+            "error"
+        ],
+        "@typescript-eslint/no-shadow": "error"
     }
 }
